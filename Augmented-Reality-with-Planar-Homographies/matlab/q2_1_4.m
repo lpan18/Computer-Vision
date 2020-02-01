@@ -2,9 +2,14 @@
 close all;
 clear all;
 
-cv_cover = imread('../data/cv_cover.jpg');
-cv_desk = imread('../data/cv_desk.png');
+% cv_cover = imread('../data/cv_cover.jpg');
+% cv_desk = imread('../data/cv_desk.png');
+% 
+cv_cover = imread('../data/hp_cover.jpg');
+cv_desk = imread('../data/hp_desk.png');
 
+% cv_cover = imread('../data/pano_left.jpg');
+% cv_desk = imread('../data/pano_right.jpg');
 
 [locs1, locs2] = matchPics(cv_cover, cv_desk);
 
