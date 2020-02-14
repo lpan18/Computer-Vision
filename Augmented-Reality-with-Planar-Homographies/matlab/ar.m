@@ -1,4 +1,7 @@
 % Q3.3.1
+% clear all;
+close all;
+
 source = loadVid('../data/ar_source.mov');
 dest = loadVid('../data/book.mov');
 cover = imread('../data/cv_cover.jpg');
@@ -8,7 +11,7 @@ size_dest = size(dest,2);
 [m, n] = size(cover);
 ar_video = dest;
 
-for i = 1:size_dest
+for i = 1:size_dest 
     [locs1, locs2] = matchPics(cover, dest(i).cdata);
     [H2to1, ~] = computeH_ransac(locs1, locs2);
     if i <= size_source
@@ -17,6 +20,12 @@ for i = 1:size_dest
     else
         source_scaled = zeros(m,n,3);
     end
+%     figure;
+%     imshow(source_scaled)
+%     figure;
+%     imshow(dest(i).cdata)
+%     figure;
+%     imshow(compositeH(inv(H2to1), source_scaled, dest(i).cdata));
     ar_video(i).cdata = compositeH(inv(H2to1), source_scaled, dest(i).cdata);
 end
 

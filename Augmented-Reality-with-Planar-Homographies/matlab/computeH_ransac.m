@@ -34,7 +34,7 @@ function [ bestH2to1, inliers] = computeH_ransac( locs1, locs2)
             points_pair = locs2_r;
         end
     end
-    points_pair
+%     points_pair
     indices = find(inliers==1) ;
     bestH2to1 = computeH_norm(locs1(indices,:),locs2(indices,:));
 %Q2.2.3
