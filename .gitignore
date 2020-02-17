@@ -1,7 +1,6 @@
 *.DS_Store
-*/data/
-*/results/
-*/ec/
 *.pdf
 *.docx
 *.zip
+*/data/
+*/results/
