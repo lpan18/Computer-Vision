@@ -39,6 +39,7 @@ end
 % Hint: You?ll get 4 projection matrix candidates for camera2 from the essential matrix. The correct configuration is the one for which most of the 3D points are in front of both cameras (positive depth).
 % Use matlab's plot3 function to plot these point correspondences on screen
 plot3(pts3d_r(:,1),pts3d_r(:,2) ,pts3d_r(:,3), '*');
+axis equal
 
 % save extrinsic parameters for dense reconstruction
 R1 = M1(:,1:3);
