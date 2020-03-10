@@ -24,8 +24,10 @@ fprintf('Starting a pool of workers with %d cores\n', numCores);
 parpool('local', numCores);
 
 %load the files and texton dictionary
-load('traintest.mat','all_imagenames','mapping');
-load('dictionary.mat','filterBank','dictionary');
+load('../data/traintest.mat','all_imagenames','mapping');
+% load('dictionary.mat','filterBank','dictionary');
+load('dictionaryRandom.mat','filterBank','dictionaryRandom');
+load('dictionaryHarris.mat','filterBank','dictionaryHarris');
 
 source = '../data/';
 target = '../data/'; 
@@ -43,7 +45,8 @@ end
 %This is a peculiarity of loading inside of a function with parfor. We need to 
 %tell MATLAB that these variables exist and should be passed to worker pools.
 filterBank = filterBank;
-dictionary = dictionary;
+dictionary = dictionaryRandom;
+% dictionary = dictionaryHarris;
 
 %matlab can't save/load inside parfor; accumulate
 %them and then do batch save
