@@ -1,6 +1,6 @@
 clear all;
 close all;
-alpha = 50;
+alpha = 50; %500
 K = 100;
 % Get a list of the training image paths
 load('../data/traintest.mat');

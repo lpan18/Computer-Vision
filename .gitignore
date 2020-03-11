@@ -2,5 +2,5 @@
 *.pdf
 *.docx
 *.zip
-*/data/
+*/data*/
 */results/

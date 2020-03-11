@@ -23,11 +23,17 @@ fprintf('Starting a pool of workers with %d cores\n', numCores);
 % matlabpool('local',numCores);
 parpool('local', numCores);
 
+% method = 'random';
+method = 'harris';
+
 %load the files and texton dictionary
 load('../data/traintest.mat','all_imagenames','mapping');
-% load('dictionary.mat','filterBank','dictionary');
-load('dictionaryRandom.mat','filterBank','dictionaryRandom');
-load('dictionaryHarris.mat','filterBank','dictionaryHarris');
+
+if strcmp(method, 'random')
+    load('dictionaryRandom.mat','filterBank','dictionaryRandom');
+else
+    load('dictionaryHarris.mat','filterBank','dictionaryHarris');
+end
 
 source = '../data/';
 target = '../data/'; 
@@ -45,8 +51,12 @@ end
 %This is a peculiarity of loading inside of a function with parfor. We need to 
 %tell MATLAB that these variables exist and should be passed to worker pools.
 filterBank = filterBank;
-dictionary = dictionaryRandom;
-% dictionary = dictionaryHarris;
+
+if strcmp(method, 'random')
+    dictionary = dictionaryRandom;
+else
+    dictionary = dictionaryHarris;
+end
 
 %matlab can't save/load inside parfor; accumulate
 %them and then do batch save
@@ -63,7 +73,7 @@ end
 fprintf('Dumping the files\n');
 for i=1:l
     wordMap = wordRepresentation{i};
-    save([target, strrep(all_imagenames{i},'.jpg','.mat')],'wordMap');
+    save([target, strrep(all_imagenames{i},'.jpg', strcat('_',method,'.mat'))],'wordMap');
 end
 
 %close the pool
