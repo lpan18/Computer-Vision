@@ -6,7 +6,7 @@ num = 40;
 mats = zeros(8, 8, num);
 accus = zeros(1, num);
 for kn = 1:num
-    [confusion_matrix, accuracy] = evaluate_kNN(dataset, kn, 'harris','euclidean');
+    [confusion_matrix, accuracy] = evaluate_kNN(dataset, kn, 'harris','chi2');
     mats(:,:,kn) = confusion_matrix;
     accus(1,kn) = accuracy;
 end
@@ -21,14 +21,14 @@ function [confusion_matrix, accuracy] = evaluate_kNN(dataset, kn, dict_method, d
     if strcmp(dict_method, 'random')
         vision = load('visionRandom.mat');
     else
-        vision = load('visionHarris_FG.mat');
+        vision = load('visionHarris.mat');
     end
     n = length(dataset.test_imagenames);
     K = size(vision.dictionary, 1);
-    confusion_matrix = zeros(8,8); %zeros(n, n);
+    confusion_matrix = zeros(8,8);
     num_correct = 0;
     for i = 1 : n
-        load(strcat('../data_gar/', strrep(dataset.test_imagenames{i},'.jpg', strcat('H.mat'))), 'wordMap');
+        load(strcat('../data/', strrep(dataset.test_imagenames{i},'.jpg', strcat('_',dict_method,'.mat'))),'wordMap');
         hist1 = getImageFeatures(wordMap, K);
         dists = getImageDistance(hist1, vision.trainFeatures, dist_metric);
         [~, idx] = sort(dists, 'ascend');
@@ -42,8 +42,4 @@ function [confusion_matrix, accuracy] = evaluate_kNN(dataset, kn, dict_method, d
         confusion_matrix(gt_label, pred_label) = confusion_matrix(gt_label, pred_label) + 1;
     end
     accuracy = num_correct/n;
-%     fprintf('Output of %s + %s\n', dict_method, dist_metric);
-%     fprintf('Accuracy: %d\n', accuracy);
-%     fprintf('Confusion matrix:\n');
-%     disp(confusion_matrix);
 end

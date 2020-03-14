@@ -23,8 +23,8 @@ fprintf('Starting a pool of workers with %d cores\n', numCores);
 % matlabpool('local',numCores);
 parpool('local', numCores);
 
-% method = 'random';
-method = 'harris';
+method = 'random';
+% method = 'harris';
 
 %load the files and texton dictionary
 load('../data/traintest.mat','all_imagenames','mapping');
@@ -66,7 +66,7 @@ wordRepresentation = cell(l,1);
 parfor i=1:l
     fprintf('Converting to visual words %s\n', all_imagenames{i});
     image = imread([source, all_imagenames{i}]);
-    wordRepresentation{i} = getVisualWords(image, filterBank, dictionary');
+    wordRepresentation{i} = getVisualWords(image, filterBank, dictionary);
 end
 
 %dump the files

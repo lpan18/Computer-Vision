@@ -1,9 +1,10 @@
 function [dist] = getImageDistance(hist1, histSet, method)
-    n = size(histSet, 1);
+    s = size(histSet, 1);
+    hist = repmat(hist1, s, 1);
+    dist = 0;
     if strcmp(method, 'euclidean')
-        dist = pdist2(hist1, histSet, 'euclidean'); % 1*1331
+        dist = pdist2(hist1, histSet, 'euclidean');
     elseif strcmp(method, 'chi2')
-        hist1Set = repmat(hist1, n, 1);
-        dist = sum((hist1Set - histSet).^2./(hist1Set+histSet+eps),2)/2; % 1331*1
+        dist = 0.5 * sum(fillmissing(((hist - histSet).^2)./(hist+histSet), 'constant', 0), 2);
     end
 end
