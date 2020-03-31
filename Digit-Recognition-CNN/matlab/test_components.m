@@ -1,10 +1,9 @@
-% Code written by Matthew Marinets from the class of 2019 Fall at SFU.
-%
+
 % a script for testing each kind of forward layer
 close all;
 
 global resultsdir
-resultsdir = '../test';
+resultsdir = '../results';
 [~,~,~] = mkdir(resultsdir);
 
 test_conv_1();
@@ -39,25 +38,26 @@ end
 
 function test_inner_1()
     input.data = zeros(25,2);
-    input.data(13, 1) = 1; % middle pixel on
-    input.data(14, 2) = 1; % pixel below middle pixel on
-    input.width = 5;
-    input.height = 5;
+    input.data(6:3:end) = 1.0;
+    input.data(7:3:end) = 0.5;
+    input.height = 25;
+    input.width = 1;
     input.channel = 1;
     input.batch_size = 2;
     
     layer.type = 'IP';
     layer.num = 25;
     
-    params.w = zeros(25);
-    params.w(13, 13) = 1.0;
-    params.w(13, 14) = 0.5;
-    params.w(14, 15) = 0.5;
+    params.w = eye(25);
+    params.w(1:25*10) = 0;
+    params.w(2, 5) = 0.5;
+    params.w(3, 4) = 0.5;
     params.b = zeros(1,25);
-    params.b(1,2) = 0.25;
+    params.b(1,2) = 0.5;
+    params.b(1,4) = 0.5;
     
     output = inner_product_forward(input, layer, params);
-    display_results(input, output, 'Inner Product Test');
+    display_results_2(input, output, params, 'Inner Product Test');
 end
 
 function test_conv_1()
@@ -86,15 +86,23 @@ function test_conv_1()
 end
 
 function test_conv_2()
-    input.data = zeros(75, 2);
+    input.data = zeros(75, 4);
     input.data(13, 1) = 1;
-    input.data(13+50, 1) = 1;
-    input.data(14, 2) = 1;
-    input.data(15+25, 2) = 1;
+    input.data(13+25, 2) = 1;
+    input.data(13+50, 3) = 1;
+    
+    input.data(1, 4) = 1;
+    input.data(22, 4) = 1;
+    input.data(13, 4) = 1;
+    input.data(14, 4) = 1;
+    input.data(14+25, 4) = 1;
+    input.data(15+25, 4) = 1;
+    input.data(75, 4) = 1;
+    
     input.width = 5;
     input.height = 5;
     input.channel = 3;
-    input.batch_size = 2;
+    input.batch_size = 4;
 
     conv_layer.type = 'CONV';
     conv_layer.num = 3;
@@ -125,24 +133,47 @@ function display_results(input, output, testname)
     global resultsdir;
     
     fig = figure;
-    img1 = reshape(output.data(:,1), output.height, output.width, output.channel);
-    subplot(2,2,2);
-    imshow(img1);
-    title('Output 1');
-    img2 = reshape(output.data(:,2), output.height, output.width, output.channel);
-    subplot(2,2,4);
-    imshow(img2);
-    title('Output 2');
+    for batch=1:input.batch_size
+        % outputs
+        img1 = reshape(output.data(:,batch), output.height, output.width, output.channel);
+        subplot(input.batch_size,2,2*batch);
+        imshow(img1);
+        title(sprintf('Output %d', batch));
+
+        % inputs
+        imgin1 = reshape(input.data(:,batch), input.height, input.width, input.channel);
+        subplot(input.batch_size,2,2*batch-1);
+        imshow(imgin1);
+        title(sprintf('Input %d', batch));
+    end
     
-    % inputs
-    imgin1 = reshape(input.data(:,1), input.height, input.width, input.channel);
-    subplot(2,2,1);
-    imshow(imgin1);
-    title('Input 1');
-    imgin2 = reshape(input.data(:,2), input.height, input.width, input.channel);
-    subplot(2,2,3);
-    imshow(imgin2);
-    title('Input 2');
+    sgtitle(testname);
+    
+    filename = [resultsdir sprintf('/%s.png', testname)];
+    frame = getframe(fig);
+    imwrite(frame2im(frame), filename);
+end
+
+function display_results_2(input, output, params, testname)
+    global resultsdir;
+    
+    fig = figure;
+    for batch=1:input.batch_size
+        % outputs
+        img = reshape(output.data(:,batch), output.height, output.width, output.channel);
+        
+        % middle
+        img = [params.w', ones(size(img)), params.b', zeros(size(img)), img];
+        
+        % inputs
+        imgin = reshape(input.data(:,batch), input.height, input.width, input.channel);
+        imgin = [imgin', 0, 0, 0, 0];
+        img = [imgin; zeros(size(imgin)); zeros(size(imgin)); ones(size(imgin)); img];
+        subplot(input.batch_size, 1, batch);
+        imshow(img)
+        title(sprintf('Batch %d', batch));
+        
+    end
     
     sgtitle(testname);
     

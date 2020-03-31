@@ -25,7 +25,7 @@ function [output] = pooling_layer_forward(input, layer)
         for h = 1 : h_out
             for w = 1 : w_out
                 matrix_window = input_s((h-1) * stride + 1: (h-1) * stride + k, (w-1) * stride + 1: (w-1) * stride + k, :);
-                output.data(h, w, :, b) = max(max(matrix_window));
+                output.data(h, w, :, b) = max(max(matrix_window)); % max pooling
             end
         end
     end

@@ -4,4 +4,4 @@
 *.zip
 */data*/
 */results/
-*/Scene-Recognition\ copy
+*/.ipynb_checkpoints/

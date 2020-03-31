@@ -2,12 +2,12 @@ clear all;
 close all;
 
 addpath('../matlab');
-[output1] = test('../images/image1.JPG', 64);
-[output2] = test('../images/image2.JPG', 64);
-[output3] = test('../images/image3.png', 64);
-[output4] = test('../images/image4.jpg', 16);
+test('../images/image1.JPG', 64);
+test('../images/image2.JPG', 64);
+test('../images/image3.png', 64);
+test('../images/image4.jpg', 16);
 
-function [output] = test(path, fontsize)
+function test(path, fontsize)
     layers = get_lenet();
     layers{1}.batch_size = 1;
     load('lenet.mat');
@@ -44,7 +44,6 @@ function [output] = test(path, fontsize)
        if occupy_ratio < 0.4
 %            figure; imshow(bbox)
            se = strel('sphere',3);
-%            bbox = imdilate(bbox,se);
            bbox = imdilate(bbox,se);
 %            figure; imshow(bbox)
        end

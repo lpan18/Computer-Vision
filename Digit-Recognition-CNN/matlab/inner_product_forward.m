@@ -8,7 +8,6 @@ output.height = n;
 output.width = 1;
 output.channel = 1;
 output.batch_size = k;
-% size(param.w' * input.data)
-% size(param.b')
 output.data = param.w' * input.data + param.b';
+% size(output.data)
 end
